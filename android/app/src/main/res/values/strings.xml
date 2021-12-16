@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">tarotonline</string>
+    <string name="facebook_app_name">TarotOnline</string>
+    <string name="app_id">843027599383828</string>
+    <string name="fb_auto_applink_scheme">fb843027599383828</string>
+    <string name="fb_login_protocol_scheme">fb843027599383828</string>
+</resources>

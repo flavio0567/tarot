@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="ISO-8859-1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Teste</title>
+
+    <link href="https://getbootstrap.com/docs/3.4/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script src="https://getbootstrap.com/docs/3.4/dist/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Atendimento via CHAT</h1>
+
+    <hr />
+
+    <div class="well">
+
+        <h2>Dados Retornados do Horário do Servidor</h2>
+
+        <p>9:00</p>
+
+    </div>
+    
+    <hr />
+
+    <div class="well">
+
+        <h2>Dados Retornados na Criação do Atendimento</h2>
+
+        <p>Dados retorno</p>
+
+    </div>
+
+    <hr />
+
+    <div class="well">
+
+        <h2>Dados Retornados em Tempo Real</h2>
+
+        <p><b>Código do Status:</b> <span id="InfDados_CodigoStatus">-</span></p>
+        <p><b>Cobrança Iniciada?</b> <span id="InfDados_IsIniciadoCobranca">-</span></p>
+        <p><b>Mktime em que a Cobrança Iniciou:</b> <span id="InfDados_InicioCobranca">-</span></p>
+
+        <p><b>Qtd. de Segundos Máximos:</b> <span id="InfDados_CliQtdSegundos">-</span></p>
+        <p><b>Qtd. de Minutos Máximos:</b> <span id="InfDados_CliQtdMinutos">-</span></p>
+
+        <p><b>Valor por Minuto:</b> <span id="InfDados_AttValorPorMinuto">-</span></p>
+        <p><b>Créditos Disponíveis:</b> <span id="InfDados_CliCreditos">-</span></p>        
+
+    </div>
+
+    <hr />
+
+     <div class="well">
+
+        <h2>Outras Informações</h2>
+
+        <p><b>Tempo Restante:</b> <span id="Ate_TempoRestante">-</span></p>
+        <p><b>Tempo Gasto:</b> <span id="Ate_TempoGasto">-</span></p>
+
+    </div>
+
+    <hr />
+
+    <div class="well">
+
+        <h2>Mensagens Recebidas</h2>
+
+        <div id="Ate_Chat"></div>
+
+    </div>
+
+    <hr />
+
+    <div class="well">
+
+        <h2>Enviar Mensagem</h2>
+
+        <form id="AttFormEnviarMensagem" action="javascript:;" method="post">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-10">
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="CmpMensagem" name="CmpMensagem" placeholder="Enviar Mensagem..." autocomplete="off" />
+                </div>
+
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+
+                <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+
+            </div>            
+        </div>
+        </form>
+
+    </div>
+
+</div>

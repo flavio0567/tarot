@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationProp, ParamListBase} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -71,10 +70,6 @@ export function PaymentOptions({route}: any) {
 
     async function callAPI() {
       try {
-        // const token = await AsyncStorage.getItem(
-        //   '@TarotOnline:token');
-        // console.log('t o k e n :', token)
-        // if (token) {
         await api
           .post(`comprar-pacotes-creditos/${price[0].Codigo}/`, {
             CodigoFormaPagamento: packetCode,

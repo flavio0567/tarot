@@ -7,13 +7,10 @@ import React, {
   useEffect,
 } from 'react';
 import api from '../services/api';
-import {LoginManager, AccessToken} from 'react-native-fbsdk';
-
 import {Alert} from 'react-native';
+import {LoginManager, AccessToken} from 'react-native-fbsdk';
+import { appleAuth } from '@invertase/react-native-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// import * as AuthSession from 'expo-auth-session';
-// import * as AppleAuthentication from 'expo-apple-authentication';
 
 interface User {
   id: string;
@@ -41,7 +38,7 @@ interface SignInCredentials {
 interface AuthContextData {
   user: User;
   signIn: (credentials: SignInCredentials) => Promise<void>;
-  // signInWithApple(): Promise<void>;
+  signInWithApple(): Promise<void>;
   // signInWithGoogle(): Promise<void>;
   signInWithFacebook(): Promise<void>;
   signOut(): Promise<void>;
@@ -84,32 +81,33 @@ function AuthProvider({children}: AuthProviderProps) {
 
     async function clearAll(): Promise<void> {
       await AsyncStorage.multiRemove([
-        '@TarotOnline:user',
+        // '@TarotOnline:user',
         '@TarotOnline:token',
       ]);
     }
     clearAll();
   }, []);
 
-  useEffect(() => {
-    async function loadStorageData(): Promise<void> {
-      const [user, token] = await AsyncStorage.multiGet([
-        '@TarotOnline:user',
-        '@TarotOnline:token',
-      ]);
-      if (user[1] && token[1]) {
-        api.defaults.headers.TOKEN = JSON.parse(token[1]).token;
-        console.log('expiration in context:', JSON.parse(token[1]).expiration);
-        setData({
-          user: JSON.parse(user[1]),
-          token: {
-            token: JSON.parse(token[1]).token,
-            expiration: JSON.parse(token[1]).expiration,
-          },
-        });
-      }
-      setIsLoading(false);
+  async function loadStorageData(): Promise<void> {
+    const [user, token] = await AsyncStorage.multiGet([
+      '@TarotOnline:user',
+      '@TarotOnline:token',
+    ]);
+    if (user[1] && token[1]) {
+      api.defaults.headers.TOKEN = JSON.parse(token[1]).token;
+      console.log('expiration in context:', JSON.parse(token[1]).expiration);
+      setData({
+        user: JSON.parse(user[1]),
+        token: {
+          token: JSON.parse(token[1]).token,
+          expiration: JSON.parse(token[1]).expiration,
+        },
+      });
     }
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
     loadStorageData();
   }, []);
 
@@ -144,61 +142,78 @@ function AuthProvider({children}: AuthProviderProps) {
     }
   };
 
-  // async function signInWithApple() {
-  //   try {
-  //     const credential = await AppleAuthentication.signInAsync({
-  //       requestedScopes: [
-  //         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-  //         AppleAuthentication.AppleAuthenticationScope.EMAIL,
-  //       ],
-  //     });
-  //     if (credential) {
-  //       const name = credential.fullName!.givenName!;
-  //       const avatar = `https://ui-avatars.com/api/?name=${name}&length=1`;
+  async function signInWithApple() {
+    loadStorageData();
+    console.log('data:', data)
+    try {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
 
-  //       const dataValues = {
-  //         id: String(credential.user),
-  //         email: credential.email!,
-  //         name,
-  //         avatar,
-  //         qtdcreditos: 0,
-  //       };
+      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
 
-  //       // const tokenApple: Token = {
-  //       //   token: credential.identityToken!,
-  //       //   expiration: new Date
-  //       // }
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        const { 
+          email,
+          fullName,
+          identityToken
+        } = appleAuthRequestResponse;
+        const name = fullName?.givenName! + ' ' + fullName?.familyName;
+        console.log(appleAuthRequestResponse)
+        if (fullName?.givenName) {
+          const avatar = `https://ui-avatars.com/api/?name=${name}&length=2`;
 
-  //       try {
-  //         if (name) {
-  //           await AsyncStorage.setItem(
-  //             '@TarotOnline:user',
-  //             JSON.stringify(dataValues),
-  //           );
-  //           setData({
-  //             user: dataValues,
-  //             token: {token: '', expiration: new Date('')},
-  //           });
-  //         } else {
-  //           const userLoaded = await AsyncStorage.getItem('@TarotOnline:user');
-  //           // await AsyncStorage.setItem(
-  //           //   '@TarotOnline:token', JSON.stringify(tokenApple),
-  //           // );
-  //           setData({
-  //             user: JSON.parse(userLoaded!),
-  //             token: {token: '', expiration: new Date('')},
-  //           });
-  //         }
-  //       } catch (error) {
-  //         console.log('Cant set asyncstorage credentials:', error);
-  //         Alert.alert('Não foi possível armazenar seus dados no dispositivo!');
-  //       }
-  //     }
-  //   } catch (error: any) {
-  //     console.log('Social athentication is not working:', error);
-  //     throw new Error(error);
-  //   }
-  // }
+          const dataValues = {
+            id: appleAuthRequestResponse.user,
+            email,
+            name,
+            avatar,
+            qtdcreditos: 0,
+          };
+
+          console.log('dataValues:', dataValues);
+
+
+          const tokenApple: Token = {
+            token: identityToken!,
+            expiration: new Date
+          }
+        }
+      }
+
+      
+
+        // try {
+        //   if (name) {
+        //     await AsyncStorage.setItem(
+        //       '@TarotOnline:user',
+        //       JSON.stringify(dataValues),
+        //     );
+        //     setData({
+        //       user: dataValues,
+        //       token: {token: '', expiration: new Date('')},
+        //     });
+        //   } else {
+        //     const userLoaded = await AsyncStorage.getItem('@TarotOnline:user');
+        //     // await AsyncStorage.setItem(
+        //     //   '@TarotOnline:token', JSON.stringify(tokenApple),
+        //     // );
+        //     setData({
+        //       user: JSON.parse(userLoaded!),
+        //       token: {token: '', expiration: new Date('')},
+        //     });
+        //   }
+        // } catch (error) {
+        //   console.log('Cant set asyncstorage credentials:', error);
+        //   Alert.alert('Não foi possível armazenar seus dados no dispositivo!');
+        // }
+      // }
+    } catch (error: any) {
+      console.log('Social athentication is not working:', error);
+      throw new Error(error);
+    }
+  }
 
   async function signInWithFacebook() {
     try {
@@ -379,7 +394,7 @@ function AuthProvider({children}: AuthProviderProps) {
         selectedMode,
         mode,
         signIn,
-        // signInWithApple,
+        signInWithApple,
         // signInWithGoogle,
         signInWithFacebook,
         signOut,

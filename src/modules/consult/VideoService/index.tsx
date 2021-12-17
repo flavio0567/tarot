@@ -13,7 +13,6 @@ import {useNavigation} from '@react-navigation/native';
 import api from '../../../shared/services/api';
 import {useAuth} from '../../../shared/hooks/globalContext';
 import uuid from 'react-native-uuid';
-import {Button} from '../../../shared/components/Button';
 import {GiftedChat} from 'react-native-gifted-chat';
 
 import tarotIcon from '../../../assets/tarot_icon.png';
@@ -39,6 +38,7 @@ import {
   TimeInfoLabel,
   TimeInfo,
   Time,
+  Button,
 } from './styles';
 
 export interface MsgProps {
@@ -399,11 +399,10 @@ export function VideoService({route}: any) {
         </TimeInfo>
       </TimeInfoWrapper>
       <Button
-        title="Finalizar Atendimento"
-        color={theme.colors.attention}
         onPress={handleChatOff}
-        style={{marginBottom: 20}}
-      />
+      >
+        <Time>Finalizar Atendimento</Time>
+      </Button>
     </Container>
   );
 }

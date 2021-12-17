@@ -20,7 +20,7 @@ export default function App() {
     <NavigationContainer>
       <ThemeProvider theme={theme}>
         <StatusBar
-          barStyle="light-content"
+          barStyle="dark-content"
           translucent
         />
         <AppProvider>

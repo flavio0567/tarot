@@ -175,29 +175,21 @@ export function SelectedAttendant({route}: any) {
   async function handleEmailService() {
     setServiceChannel('mail');
     selectedMode('mail');
-    console.log('Email service activated!!!!!');
-    if (attendant.Cadastro.Status === 'DISPONIVEL') {
-      async function callAPI() {
-        try {
-          if (api.defaults.headers.TOKEN) {
-            navigation.navigate('EmailService', {attendant});
-          } else {
-            Alert.alert(
-              'Consulta não disponível:',
-              'Token do Cliente não encontrado, favor tentar novamente!',
-            );
-          }
-        } catch (error) {
-          console.log(error);
+    async function callAPI() {
+      try {
+        if (api.defaults.headers.TOKEN) {
+          navigation.navigate('EmailService', {attendant});
+        } else {
+          Alert.alert(
+            'Consulta não disponível:',
+            'Token do Cliente não encontrado, favor tentar novamente!',
+          );
         }
+      } catch (error) {
+        console.log(error);
       }
-      callAPI();
-    } else {
-      Alert.alert(
-        'Consulta não disponível:',
-        'O consultor não está disponível, tente novamente mais tarde!',
-      );
     }
+    callAPI();
   }
 
   return (
@@ -228,9 +220,9 @@ export function SelectedAttendant({route}: any) {
         </UserWrapper>
       </Header>
       <AttendantWrapper>
-        <PhotoWrapper>
+        {/* <PhotoWrapper> */}
           <Photo source={{uri: `${attendant.Cadastro.Foto}`}} />
-        </PhotoWrapper>
+        {/* </PhotoWrapper> */}
         <Attendant>
           <Title>{attendant.Cadastro.Nome}</Title>
           <Availability type={attendant.Cadastro.Status}>

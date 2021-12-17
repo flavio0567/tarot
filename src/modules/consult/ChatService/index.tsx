@@ -342,7 +342,7 @@ export function ChatService({route}: any) {
   return (
     <Container>
       <Separator>
-        <BackButton onPress={() => navigation.goBack()}>
+        <BackButton onPress={handleChatOff}>
           <Icon name="chevron-back" />
         </BackButton>
         <SeparatorText>Consulta por Chat</SeparatorText>

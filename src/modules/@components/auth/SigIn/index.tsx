@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {
   StatusBar,
   Alert,
-  // Platform,
+  Platform,
   // KeyboardAvoidingView,
   // TouchableWithoutFeedback,
   // Keyboard,
@@ -17,7 +17,7 @@ import {PasswordInput} from '../../../../shared/components/PasswordInput';
 import LogoSvg from '../../../../assets/tarotonline_logo.svg';
 import FacebookSvg from '../../../../assets/fb_logo.svg';
 // import GoogleSvg from '../../assets/google_logo.svg';
-// import AppleSvg from '../../assets/apple_logo.svg';
+import AppleSvg from '../../../../assets/apple_logo.svg';
 import {useAuth} from '../../../../shared/hooks/globalContext';
 
 import {SignInSocialButton} from '../../../../shared/components/SignInSocialButton';
@@ -44,11 +44,7 @@ export function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const {signInWithFacebook} = useAuth();
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
+  const {signInWithFacebook, signInWithApple} = useAuth();
 
   async function handleSignInWithFacebook() {
     try {
@@ -65,14 +61,14 @@ export function SignIn() {
 
   async function handleSignInWithApple() {
     console.log('login w/ Apple');
-    // try {
-    //   setIsLoading(true);
-    //   return await signInWithApple();
-    // } catch (error) {
-    //   console.log('error:', error);
-    //   Alert.alert('Não foi possível conectar a conta Apple, tente novamente! ');
-    //   setIsLoading(false);
-    // }
+    try {
+      setIsLoading(true);
+      return await signInWithApple();
+    } catch (error) {
+      console.log('error:', error);
+      Alert.alert('Não foi possível conectar a conta Apple, tente novamente! ');
+      setIsLoading(false);
+    }
   }
 
   async function handleSignInWithGoogle() {
@@ -118,7 +114,7 @@ export function SignIn() {
     <Container>
       <StatusBar
         barStyle="dark-content"
-        backgroundColor="#ffffff"
+        // backgroundColor="#ffffff"
         translucent
       />
       <LogoView>
@@ -186,14 +182,14 @@ export function SignIn() {
             title="Conectar via Google"
             svg={}
             onPress={handleSignInWithGoogle}
-          />
+          /> */}
           {Platform.OS === 'ios' && (
             <SignInSocialButton
               title="Conectar via Apple"
-              svg={}
+              svg={AppleSvg}
               onPress={handleSignInWithApple}
             />
-          )} */}
+          )}
         </FooterWrapper>
       </Content>
     </Container>

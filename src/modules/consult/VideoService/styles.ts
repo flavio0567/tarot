@@ -69,3 +69,10 @@ export const Time = styled.Text`
   color: ${({theme}) => theme.colors.shape};
   font-family: ${({theme}) => theme.fonts.bold};
 `;
+
+export const Button = styled(RectButton)`
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.attention}
+  align-items: center;
+  padding: 18px;
+`;

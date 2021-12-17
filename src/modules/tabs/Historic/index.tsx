@@ -40,7 +40,6 @@ export function Historic() {
           }>
           <Icon
             name="chatbubbles-outline"
-            // eslint-disable-next-line react-native/no-inline-styles
             style={{color: theme.colors.shape, marginLeft: -10}}
           />
           <ModalTextLabel>Chat</ModalTextLabel>
@@ -70,7 +69,6 @@ export function Historic() {
           }>
           <Icon
             name="call-outline"
-            // eslint-disable-next-line react-native/no-inline-styles
             style={{color: theme.colors.shape, marginLeft: 16}}
           />
           <ModalTextLabel>Telefone</ModalTextLabel>

@@ -26,7 +26,7 @@ export const Header = styled.View`
   width: 100%;
 
   background-color: ${({theme}) => theme.colors.shape};
-  padding: ${Platform.OS === 'ios' ? getStatusBarHeight() - 12 : 0}px 14px;
+  padding: ${Platform.OS === 'ios' ? getStatusBarHeight() - 16 : 0}px 14px;
   justify-content: center;
   align-items: center;
   flex-direction: row;
@@ -48,7 +48,6 @@ export const UserInfo = styled.View`
 `;
 
 export const User = styled.View`
-  /* margin-top: 10px; */
   margin-left: 5px;
 `;
 
@@ -101,7 +100,7 @@ export const Photo = styled(Image).attrs({
 `;
 
 export const AttendantWrapper = styled.View`
-  margin-top: 5px;
+  /* margin-top: 5px; */
 `;
 
 export const Attendant = styled.View`

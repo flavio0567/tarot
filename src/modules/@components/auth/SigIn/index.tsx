@@ -9,14 +9,13 @@ import {
   Dimensions,
 } from 'react-native';
 import * as Yup from 'yup';
-
 import {Button} from '../../../../shared/components/Button';
 import {Input} from '../../../../shared/components/Input';
 import {PasswordInput} from '../../../../shared/components/PasswordInput';
 
 import LogoSvg from '../../../../assets/tarotonline_logo.svg';
 import FacebookSvg from '../../../../assets/fb_logo.svg';
-// import GoogleSvg from '../../assets/google_logo.svg';
+import GoogleSvg from '../../../../assets/google_logo.svg';
 import AppleSvg from '../../../../assets/apple_logo.svg';
 import {useAuth} from '../../../../shared/hooks/globalContext';
 
@@ -44,7 +43,7 @@ export function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const {signInWithFacebook, signInWithApple} = useAuth();
+  const {signInWithFacebook, signInWithApple, signInWithGoogle} = useAuth();
 
   async function handleSignInWithFacebook() {
     try {
@@ -73,17 +72,17 @@ export function SignIn() {
 
   async function handleSignInWithGoogle() {
     console.log('login w/ Google');
-    // try {
-    //   setIsLoading(true);
-    //   await signInWithGoogle();
-    //   setIsLoading(false);
-    // } catch (error) {
-    //   console.log('Cound not connect to google:', error);
-    //   Alert.alert(
-    //     'Não foi possível conectar a conta Google, tente novamente! ',
-    //   );
-    //   setIsLoading(false);
-    // }
+    try {
+      setIsLoading(true);
+      await signInWithGoogle();
+      setIsLoading(false);
+    } catch (error) {
+      console.log('Cound not connect to google:', error);
+      Alert.alert(
+        'Não foi possível conectar a conta Google, tente novamente! ',
+      );
+      setIsLoading(false);
+    }
   }
 
   async function handleSignIn() {
@@ -154,35 +153,16 @@ export function SignIn() {
         </ConfirmationButton>
         <FooterWrapper>
           <CredentialsLabel>Acesso rápido com</CredentialsLabel>
-          {/* <LoginButton
-            onLoginFinished={(error, result) => {
-              if (error) {
-                console.log('login has error: ' + result.error);
-                Alert.alert(`Não foi possível Logar no app: ${result.error}`);
-              } else if (result.isCancelled) {
-                console.log('login is cancelled.');
-              } else {
-                AccessToken.getCurrentAccessToken().then(
-                  (data: AccessToken | null) => {
-                    const accessToken: string | undefined =
-                      data?.accessToken.toString();
-                    handleSignInWithFacebook(accessToken);
-                  },
-                );
-              }
-            }}
-            onLogoutFinished={() => console.log('logout.')}
-          /> */}
           <SignInSocialButton
             title="Conectar via Facebook"
             svg={FacebookSvg}
             onPress={handleSignInWithFacebook}
           />
-          {/* <SignInSocialButton
+          <SignInSocialButton
             title="Conectar via Google"
-            svg={}
+            svg={GoogleSvg}
             onPress={handleSignInWithGoogle}
-          /> */}
+          />
           {Platform.OS === 'ios' && (
             <SignInSocialButton
               title="Conectar via Apple"

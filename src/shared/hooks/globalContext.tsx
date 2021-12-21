@@ -7,10 +7,18 @@ import React, {
   useEffect,
 } from 'react';
 import api from '../services/api';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 import {LoginManager, AccessToken} from 'react-native-fbsdk';
-import { appleAuth } from '@invertase/react-native-apple-authentication';
+import {
+  appleAuth,
+  appleAuthAndroid,
+} from '@invertase/react-native-apple-authentication';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { isTSCallSignatureDeclaration } from '@babel/types';
 
 interface User {
   id: string;
@@ -39,7 +47,7 @@ interface AuthContextData {
   user: User;
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signInWithApple(): Promise<void>;
-  // signInWithGoogle(): Promise<void>;
+  signInWithGoogle(): Promise<void>;
   signInWithFacebook(): Promise<void>;
   signOut(): Promise<void>;
   isLoading: boolean;
@@ -47,18 +55,6 @@ interface AuthContextData {
   mode: string;
   selectedCountry: (country: string) => Promise<void>;
   callingCode: string;
-}
-
-interface AuthorizationResponse {
-  params: {
-    access_token: string;
-  };
-  type: string;
-}
-
-interface AuthorizationFacebookResponse {
-  token: string;
-  type: string;
 }
 
 interface AuthProviderProps {
@@ -111,16 +107,51 @@ function AuthProvider({children}: AuthProviderProps) {
     loadStorageData();
   }, []);
 
+  async function setClientDetail(avatar: string | null) {
+    try {
+      const authenticationResponse = await api.get(
+        'autenticacao/detalhes-cliente/',
+      );
+
+      const {Codigo, Email, Nome, QtdCreditos} = authenticationResponse.data;
+
+      const dataValues = {
+        id: Codigo,
+        email: Email,
+        name: Nome,
+        avatar,
+        qtdcreditos: QtdCreditos,
+      };
+      
+      console.log('dataValues in client details:', dataValues);
+      await AsyncStorage.setItem(
+        '@TarotOnline:user',
+        JSON.stringify(dataValues),
+      );
+
+      setData({
+        user: dataValues,
+        token: {token, expiration},
+      });
+    } catch (err) {
+      console.log('Could not get client informations:', err);
+      Alert.alert('Erro ao obter detalhes do cliente!');
+    }
+  }
+
   const getTokenFromPlatform = async (
     provider: string,
     token: string,
-    avatar: string,
+    id_token: string | null,
+    avatar: string | null,
   ) => {
+    console.log('gettokenFromPlarform:', provider, token, id_token, avatar);
     try {
       await api
         .post('autenticacao/login-social/', {
           Provedor: provider,
           AccessToken: token,
+          id_token,
         })
         .then(async res => {
           const {Token, DataExpiracao} = res.data;
@@ -145,70 +176,28 @@ function AuthProvider({children}: AuthProviderProps) {
   async function signInWithApple() {
     loadStorageData();
     console.log('data:', data)
+
     try {
-      const appleAuthRequestResponse = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-      });
+      let avatar: string | null;
+      await api
+        .get('outros/login-social/')
+        .then(async res => {
+          const { Apple } = res.data;
 
-      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+          const appleAuthRequestResponse = await appleAuth.performRequest({
+            requestedOperation: appleAuth.Operation.LOGIN,
+            requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+          })
+          const { identityToken, nonce, fullName, email } = appleAuthRequestResponse;
+          // console.log('identityToken, nonce______', appleAuthRequestResponse);
+          const name = fullName?.givenName! + ' ' + fullName?.familyName;
 
-      if (credentialState === appleAuth.State.AUTHORIZED) {
-        const { 
-          email,
-          fullName,
-          identityToken
-        } = appleAuthRequestResponse;
-        const name = fullName?.givenName! + ' ' + fullName?.familyName;
-        console.log(appleAuthRequestResponse)
-        if (fullName?.givenName) {
-          const avatar = `https://ui-avatars.com/api/?name=${name}&length=2`;
-
-          const dataValues = {
-            id: appleAuthRequestResponse.user,
-            email,
-            name,
-            avatar,
-            qtdcreditos: 0,
-          };
-
-          console.log('dataValues:', dataValues);
-
-
-          const tokenApple: Token = {
-            token: identityToken!,
-            expiration: new Date
+          if (fullName?.givenName) {
+            avatar = `https://ui-avatars.com/api/?name=${name}&length=2`;
           }
-        }
-      }
 
-      
-
-        // try {
-        //   if (name) {
-        //     await AsyncStorage.setItem(
-        //       '@TarotOnline:user',
-        //       JSON.stringify(dataValues),
-        //     );
-        //     setData({
-        //       user: dataValues,
-        //       token: {token: '', expiration: new Date('')},
-        //     });
-        //   } else {
-        //     const userLoaded = await AsyncStorage.getItem('@TarotOnline:user');
-        //     // await AsyncStorage.setItem(
-        //     //   '@TarotOnline:token', JSON.stringify(tokenApple),
-        //     // );
-        //     setData({
-        //       user: JSON.parse(userLoaded!),
-        //       token: {token: '', expiration: new Date('')},
-        //     });
-        //   }
-        // } catch (error) {
-        //   console.log('Cant set asyncstorage credentials:', error);
-        //   Alert.alert('Não foi possível armazenar seus dados no dispositivo!');
-        // }
-      // }
+          getTokenFromPlatform('Apple', nonce, identityToken, avatar);
+        })
     } catch (error: any) {
       console.log('Social athentication is not working:', error);
       throw new Error(error);
@@ -287,34 +276,51 @@ function AuthProvider({children}: AuthProviderProps) {
     }
   }
 
-  // async function signInWithGoogle() {
-  //   try {
-  //     const {CLIENT_ID} = process.env;
-  //     const {REDIRECT_URI} = process.env;
-  //     const RESPONSE_TYPE = 'token';
-  //     const SCOPE = encodeURI('profile email');
+  async function signInWithGoogle() {
+    
+    try {
+      await api
+        .get('outros/login-social/')
+        .then(async res => {
+          const { Google } = res.data;
+          console.log('Google token:', Google);
 
-  //     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
+          async function signIn() {
+            try {
+              await GoogleSignin.hasPlayServices();
+              const userInfo = await GoogleSignin.signIn();
+              Alert.alert("success:" + JSON.stringify(userInfo));
+              console.log(userInfo);
+            } catch (error) {
+              console.log('Error:', error);
+            };
+          }
 
-  //     const {type, params} = (await AuthSession.startAsync({
-  //       authUrl,
-  //     })) as AuthorizationResponse;
+          if (Platform.OS === 'ios') {
+            console.log('ios configure');
+            GoogleSignin.configure({
+              iosClientId: Google,
+            });
+            signIn();
+          } else {
+            console.log('Google Android  Auth')
+            GoogleSignin.configure({
+              // scopes: ['https://apis.google.com/js/platform.js'],
+              webClientId: Google,
+              offlineAccess: false,
+              // forceCodeForRefreshToken: true,
+            });
+            signIn();
+          }
 
-  //     if (type === 'success') {
-  //       const response = await fetch(
-  //         `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`,
-  //       );
-  //       const userInfo = await response.json();
-  //       getTokenFromPlatform('Google', params.access_token, userInfo.picture);
-  //       setClientDetail(userInfo.picture);
-  //     } else {
-  //       console.log('retorno do google por desistencia:');
-  //     }
-  //   } catch (error: any) {
-  //     console.log('Social athentication is not working:', error);
-  //     throw new Error(error);
-  //   }
-  // }
+
+          // const userInfo = await GoogleSignin.signInSilently();
+        });
+    } catch (error: any) {
+      console.log('Social athentication is not working:', error);
+      throw new Error(error);
+    }
+  }
 
   async function signIn({email, password}: SignInCredentials) {
     try {
@@ -333,37 +339,6 @@ function AuthProvider({children}: AuthProviderProps) {
       Alert.alert(
         'Erro ao tentar realizar Login no app, verifique suas credenciais!',
       );
-    }
-  }
-
-  async function setClientDetail(avatar: string) {
-    try {
-      const authenticationResponse = await api.get(
-        'autenticacao/detalhes-cliente/',
-      );
-
-      const {Codigo, Email, Nome, QtdCreditos} = authenticationResponse.data;
-
-      const dataValues = {
-        id: Codigo,
-        email: Email,
-        name: Nome,
-        avatar,
-        qtdcreditos: QtdCreditos,
-      };
-
-      await AsyncStorage.setItem(
-        '@TarotOnline:user',
-        JSON.stringify(dataValues),
-      );
-
-      setData({
-        user: dataValues,
-        token: {token, expiration},
-      });
-    } catch (err) {
-      console.log('Could not get client informations:', err);
-      Alert.alert('Erro ao obter detalhes do cliente!');
     }
   }
 
@@ -395,7 +370,7 @@ function AuthProvider({children}: AuthProviderProps) {
         mode,
         signIn,
         signInWithApple,
-        // signInWithGoogle,
+        signInWithGoogle,
         signInWithFacebook,
         signOut,
         isLoading,

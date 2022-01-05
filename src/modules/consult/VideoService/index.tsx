@@ -1,12 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-shadow */
-/* eslint-disable react-native/no-inline-styles */
-// @ refresh reset
 import React, {useState, useEffect, useCallback} from 'react';
 import {Platform, KeyboardAvoidingView, SafeAreaView} from 'react-native';
 import {WebView} from 'react-native-webview';
 
-import {format} from 'date-fns';
 import {NavigationProp, ParamListBase} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -330,7 +325,6 @@ export function VideoService({route}: any) {
     <GiftedChat
       messages={messages}
       onSend={message => {
-        // eslint-disable-next-line no-sequences
         onSend(message), send(message);
       }}
       user={{_id: user.id}}
@@ -364,9 +358,13 @@ export function VideoService({route}: any) {
           {attDetail?.IsIniciadoCobranca === 'S' && (
             <WebView
               originWhitelist={['*']}
+              bounces={true}
               automaticallyAdjustContentInsets={false}
-              allowsInlineMediaPlayback
-              source={{uri: `${iFrame}`}}
+              allowInlineMediaPlayback={true}
+              mediaPlaybackRequiresUserAction={false}  
+              androidHardwareAccelerationDisabled={true}
+              source={{ uri: `${iFrame}` }}
+              useWebkit
             />
           )}
           {chat}
@@ -374,11 +372,22 @@ export function VideoService({route}: any) {
       ) : (
         <SafeAreaView style={{flex: 1}}>
           {attDetail?.IsIniciadoCobranca === 'S' && (
-            <WebView
-              useWebKit
+              <WebView
+              style={{ opacity: 0.99, overflow: 'hidden' }} 
               originWhitelist={['*']}
-              allowsInlineMediaPlayback
+              bounces={true}
+              javaScriptEnabled
+              cacheEnabled={true}
+              geolocationEnabled={false}
+              javaScriptEnabledAndroid={true}
+              allowInlineMediaPlayback={true}
+              mediaPlaybackRequiresUserAction={false}  
+              mixedContentMode={'compatibility'}
+              scalesPageToFit
               source={{uri: `${iFrame}`}}
+              startInLoadingState={true}
+              useWebkit
+              userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"
             />
           )}
           {chat}

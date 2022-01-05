@@ -2,7 +2,7 @@
     <string name="app_name">tarotonline</string>
     <string name="facebook_app_name">TarotOnline</string>
     <string name="app_id">843027599383828</string>
-    <string name="client_id">1063004594367-v57dkg710n5psofv754civaave2vf4ca.apps.googleusercontent.com</string>
+    <string name="server_client_id">1063004594367-v57dkg710n5psofv754civaave2vf4ca.apps.googleusercontent.com</string>
     <string name="fb_auto_applink_scheme">fb843027599383828</string>
     <string name="fb_login_protocol_scheme">fb843027599383828</string>
 </resources>

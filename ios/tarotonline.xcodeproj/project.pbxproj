@@ -13,6 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		6458CD6E276A9CC200C43D30 /* tarotonline.xcworkspace in Resources */ = {isa = PBXBuildFile; fileRef = 6458CD6D276A9CC200C43D30 /* tarotonline.xcworkspace */; };
+		64A84EC2277CF72A005A2724 /* libGoogleSignIn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64A84EC1277CF72A005A2724 /* libGoogleSignIn.a */; };
 		66A67E92BB764F24A78481BB /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB3B0F726C6E41C5A9B7E068 /* Roboto-Medium.ttf */; };
 		6AE8037F9518B2238D9190E4 /* libPods-tarotonline-tarotonlineTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE2DE1533AFA120823C71A1 /* libPods-tarotonline-tarotonlineTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -52,6 +53,7 @@
 		6458CD6D276A9CC200C43D30 /* tarotonline.xcworkspace */ = {isa = PBXFileReference; lastKnownFileType = wrapper.workspace; path = tarotonline.xcworkspace; sourceTree = "<group>"; };
 		645F6898276D0AA900896C28 /* libGoogleSignIn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGoogleSignIn.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		645F689A276D0AF800896C28 /* libRNGoogleSignin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGoogleSignin.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		64A84EC1277CF72A005A2724 /* libGoogleSignIn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGoogleSignIn.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		64D6BC2B276B9ED1000A9A34 /* tarotonline.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tarotonline.entitlements; path = tarotonline/tarotonline.entitlements; sourceTree = "<group>"; };
 		685D5BE929F04D36901DE947 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		6D04D1282756436FA67879FE /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64A84EC2277CF72A005A2724 /* libGoogleSignIn.a in Frameworks */,
 				DBA024CE86A2444183F9A781 /* libPods-tarotonline.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +130,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				64A84EC1277CF72A005A2724 /* libGoogleSignIn.a */,
 				645F689A276D0AF800896C28 /* libRNGoogleSignin.a */,
 				645F6898276D0AA900896C28 /* libGoogleSignIn.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,

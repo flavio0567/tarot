@@ -4,14 +4,14 @@ import {NavigationProp, ParamListBase} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
 import api from '../../../shared/services/api';
-import {Alert, Dimensions} from 'react-native';
+import {Alert, Dimensions, Platform} from 'react-native';
 
 import LogoSvg from '../../../assets/tarotonline_logo.svg';
 
 import Intl from 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 
-import redeImg from '../../../assets/rede_big.png';
+import redeImg from '../../../assets/rede.png';
 import paymeeImg from '../../../assets/paymee_big.png';
 import paypalImg from '../../../assets/paypal_big.png';
 import pagseguroImg from '../../../assets/pagseguro.png';
@@ -125,14 +125,14 @@ export function PaymentOptions({route}: any) {
               <CreditImage source={creditImg} />
               <CardText>Cartão de Crédito</CardText>
             </CardView>
-            <BoxTimeToRelease>
+            <BoxTimeToRelease style={{ marginTop: -5 }}>
               <TimeToReleaseTextText>Liberação imediata</TimeToReleaseTextText>
             </BoxTimeToRelease>
           </BoxCards>
         </Box>
         <Box onPress={() => handlePayment('PAYMEE')}>
           <BoxLogo>
-            <ImageIcon source={paymeeImg} style={{marginTop: 5}} />
+            <ImageIcon source={paymeeImg} style={{marginTop: 2}} />
           </BoxLogo>
           <BoxCards>
             <MultiCardView>
@@ -166,7 +166,7 @@ export function PaymentOptions({route}: any) {
               <CreditImage source={creditImg} />
               <CardText>Cartão de Crédito</CardText>
             </CardView>
-            <BoxTimeToRelease>
+            <BoxTimeToRelease style={{ marginTop: -10 }}>
               <TimeToReleaseTextText>Liberação imediata</TimeToReleaseTextText>
             </BoxTimeToRelease>
           </BoxCards>
@@ -178,8 +178,8 @@ export function PaymentOptions({route}: any) {
           <BoxCards>
             <MultiCardView>
               <IconCardView>
-                <CreditImage source={creditImg} style={{margin: 5}} />
-                <CardText style={{marginTop: 9}}>Cartão de Crédito</CardText>
+                <CreditImage source={creditImg} />
+                <CardText style={{marginTop: 5}}>Cartão de Crédito</CardText>
               </IconCardView>
               <IconCardView>
                 <ImageIcon

@@ -15,10 +15,8 @@ import {
 } from '@invertase/react-native-apple-authentication';
 import {
   GoogleSignin,
-  statusCodes,
 } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { isTSCallSignatureDeclaration } from '@babel/types';
 
 interface User {
   id: string;
@@ -285,6 +283,23 @@ function AuthProvider({children}: AuthProviderProps) {
           const { Google } = res.data;
           console.log('Google token:', Google);
 
+          if (Platform.OS === 'ios') {
+            console.log('ios configure');
+            GoogleSignin.configure({
+              webClientId: Google,
+              offlineAccess: true,
+            });
+            signIn();
+          } else {
+            console.log('Google Android  Auth')
+            GoogleSignin.configure({
+              scopes: ['profile', 'email'],
+              webClientId: Google,
+              offlineAccess: true,
+            });
+            signIn();
+          }
+        
           async function signIn() {
             try {
               await GoogleSignin.hasPlayServices();
@@ -294,23 +309,6 @@ function AuthProvider({children}: AuthProviderProps) {
             } catch (error) {
               console.log('Error:', error);
             };
-          }
-
-          if (Platform.OS === 'ios') {
-            console.log('ios configure');
-            GoogleSignin.configure({
-              iosClientId: Google,
-            });
-            signIn();
-          } else {
-            console.log('Google Android  Auth')
-            GoogleSignin.configure({
-              // scopes: ['https://apis.google.com/js/platform.js'],
-              webClientId: Google,
-              offlineAccess: false,
-              // forceCodeForRefreshToken: true,
-            });
-            signIn();
           }
 
 

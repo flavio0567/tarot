@@ -19,6 +19,7 @@ export const Header = styled.SafeAreaView`
 
 export const LogoView = styled.View`
   margin-left: 10px;
+  margin-top: ${Platform.OS === 'ios' ? RFValue(0) : RFValue(22)}px;
 `;
 
 export const SafeView = styled.View`
@@ -29,6 +30,7 @@ export const SafeView = styled.View`
 export const BackButton = styled(RectButton)`
   width: ${RFValue(48)}px;
   height: ${RFValue(48)}px;
+  margin-top: ${Platform.OS === 'ios' ? RFValue(0) : RFValue(20)}px;
   color: ${({theme}) => theme.colors.secondary};
 `;
 
@@ -49,11 +51,11 @@ export const Icon = styled(Ionicons)`
 `;
 
 export const Content = styled.ScrollView.attrs({
-  contentContainerStyle: {
-    paddingBottom: 10,
-  },
   showsVerticalScrollIndicator: false,
-})``;
+})`
+  margin-top: 14px;
+  margin-left: 20px;
+`;
 
 export const Box = styled(RectButton)`
   width: ${RFValue(260)}px;
@@ -62,8 +64,8 @@ export const Box = styled(RectButton)`
 `;
 
 export const BoxLogo = styled.View`
-  width: ${RFValue(259)}px;
-  height: ${RFValue(56)}px;
+  width: ${Platform.OS === 'ios' ? RFValue(259) : RFValue(274)}px;
+  height: ${Platform.OS === 'ios' ? RFValue(56) : RFValue(64)}px;
   align-items: center;
   justify-content: center;
 
@@ -79,7 +81,7 @@ export const ImageIcon = styled.Image`
 `;
 
 export const BoxCards = styled.View`
-  width: ${RFValue(259)}px;
+  width: ${Platform.OS === 'ios' ? RFValue(259) : RFValue(274)}px;
   height: ${RFValue(156)}px;
   margin-top: 3px;
   padding: 6px;

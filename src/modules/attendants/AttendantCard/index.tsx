@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {RectButtonProps} from 'react-native-gesture-handler';
 import {NavigationProp, ParamListBase} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 import Intl from 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
@@ -35,15 +34,6 @@ interface Props extends RectButtonProps {
     item: AttendantDTO;
   };
 }
-
-// type icon = {
-//   available: 'event-available',
-//   unavailable: 'event-busy'
-// };
-
-// interface TypeAvailability {
-//   type: 'DISPONIVEL' | 'OCUPADO';
-// }
 
 interface CadastroProps {
   Codigo: string;

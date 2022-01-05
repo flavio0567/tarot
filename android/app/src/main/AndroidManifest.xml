@@ -2,7 +2,13 @@
   package="com.tarotonline">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.webkit.PermissionRequest" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MICROPHONE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"

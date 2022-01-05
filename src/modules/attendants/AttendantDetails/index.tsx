@@ -92,6 +92,7 @@ export function AttendantDetails({route}: any) {
   );
 
   useEffect(() => {
+    console.log('CADASTRO:', Cadastro)
     setAttendantDetails(Cadastro);
 
     clientComments.Dados.map((item: any) => {

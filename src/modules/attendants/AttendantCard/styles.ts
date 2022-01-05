@@ -18,7 +18,12 @@ export const Container = styled(RectButton)`
   margin-left: 10%;
   margin-bottom: 30px;
   padding: 10px;
-  border: solid 5px;
+  border: solid;
+  border-width: 5px;
+  /* border-left-width: 5px;
+  border-right-width: 5px;
+  border-top-width: 5px;
+  border-bottom-width: 5px; */
   border-color: ${({theme}) => theme.colors.primary};
 `;
 
